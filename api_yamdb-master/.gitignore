@@ -1,11 +1,11 @@
 .git/*
 env/
-venv/
+venv/*
 
 __pycache__/
 *.py[cod]
 
-.idea
+.idea/*
 .DS_Store
 .AppleDouble
 .LSOverride

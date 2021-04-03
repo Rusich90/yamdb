@@ -1,6 +1,8 @@
 .git/*
 env/
 venv/*
+../.idea
+../venv/
 
 __pycache__/
 *.py[cod]

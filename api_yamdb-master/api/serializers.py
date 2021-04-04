@@ -5,7 +5,7 @@ from title.models import Title, Review
 class TitleSerializers(serializers.ModelSerializer):
     class Meta:
         model = Title
-        fields = ("name", "category")
+        fields = ("name", "year", "category")
 
 
 class ReviewSerializers(serializers.ModelSerializer):

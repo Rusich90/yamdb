@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
-
+from datetime import datetime
 
 class User(AbstractUser):
     ROLE_CHOISE = (
@@ -10,6 +10,7 @@ class User(AbstractUser):
         ("admin", "admin")
     )
     role = models.CharField(choices=ROLE_CHOISE, default='user', max_length=10)
+    description = models.TextField(default=None)
 
 
 class Category(models.Model):
@@ -24,7 +25,11 @@ class Genre(models.Model):
 
 class Title(models.Model):
     name = models.CharField(max_length=200)
-    year = models.DateField()
+    year = models.PositiveIntegerField(
+            validators=[
+                MinValueValidator(1000),
+                MaxValueValidator(datetime.now().year)],
+            help_text="Use the following format: <YYYY>")
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="category")
 
 

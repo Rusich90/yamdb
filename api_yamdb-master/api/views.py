@@ -2,13 +2,17 @@ from rest_framework import viewsets, status, pagination
 from title.models import Review, Title, User, Category, Genre, Comments
 from .serializers import (ReviewSerializers, TitleSerializers,
                           UserSerializers, CategorySerializers,
-                          GenreSerializers)
+                          GenreSerializers, CommentsSerializers)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializers
     pagination_class = pagination.PageNumberPagination
+
+    def get_queryset(self):
+        return Review.objects.filter(
+            title=self.kwargs['title_id']
+        )
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -32,3 +36,13 @@ class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializers
     pagination_class = pagination.PageNumberPagination
+
+
+class CommentsViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentsSerializers
+    pagination_class = pagination.PageNumberPagination
+
+    def get_queryset(self):
+        return Comments.objects.filter(
+            review=self.kwargs["review_id"]
+        )

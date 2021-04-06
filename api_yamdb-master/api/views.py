@@ -1,8 +1,9 @@
-from rest_framework import viewsets, status, pagination
+from rest_framework import viewsets, status, pagination, filters
 from title.models import Review, Title, User, Category, Genre, Comments
 from .serializers import (ReviewSerializers, TitleSerializers,
                           UserSerializers, CategorySerializers,
                           GenreSerializers, CommentsSerializers)
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -19,6 +20,8 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializers
     pagination_class = pagination.PageNumberPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["genre",]
 
 
 class UserViewSet(viewsets.ModelViewSet):

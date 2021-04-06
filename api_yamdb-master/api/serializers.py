@@ -3,25 +3,10 @@ from title.models import Title, Review, User, Category, Genre, Comments
 from django.db.models import Avg
 
 
-class TitleSerializers(serializers.ModelSerializer):
-    rating = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Title
-        fields = ("id", "name", "year", "rating", "category")
-
-    def get_rating(self, obj):
-        rt = obj.reviews.all().aggregate(Avg('score'))
-        if rt == None:
-            return 0
-        rating = int(rt["score__avg"])
-        return rating
-
-
 class ReviewSerializers(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ("title", "text", "author", "score")
+        fields = ("id", "text", "author", "score", "pub_date")
 
 
 class UserSerializers(serializers.ModelSerializer):
@@ -47,3 +32,26 @@ class CommentsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Comments
         fields = ("id", "text", "author", "pub_date")
+
+
+class TitleSerializers(serializers.ModelSerializer):
+    rating = serializers.SerializerMethodField()
+    category = CategorySerializers()
+    genre = GenreSerializers(many=True)
+
+    class Meta:
+        model = Title
+        fields = ("id", "name", "year", "rating", "genre", "category")
+
+    def get_rating(self, obj):
+        rt = obj.reviews.all().aggregate(Avg('score'))
+        if rt == None:
+            return 0
+        rating = int(rt["score__avg"])
+        return rating
+
+    # def get_category(self, obj):
+    #     category = {"name": obj.category.name,
+    #                 "slug": obj.category.slug}
+    #     return category
+

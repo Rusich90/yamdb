@@ -24,18 +24,18 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, blank=False)
     year = models.PositiveIntegerField(
             validators=[
                 MinValueValidator(1000),
                 MaxValueValidator(datetime.now().year)],
             help_text="Use the following format: <YYYY>")
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="category")
-
-
-class Genre_Title(models.Model):
-    title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name="genres")
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL,
+                                 related_name="category",
+                                 blank=True,
+                                 null=True)
+    genre = models.ManyToManyField(Genre, related_name="genre")
 
 
 class Review(models.Model):

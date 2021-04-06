@@ -4,6 +4,7 @@ from .serializers import (ReviewSerializers, TitleSerializers,
                           UserSerializers, CategorySerializers,
                           GenreSerializers, CommentsSerializers)
 from django_filters.rest_framework import DjangoFilterBackend
+from .filters import TitleFilter
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -20,14 +21,15 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializers
     pagination_class = pagination.PageNumberPagination
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ["genre",]
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
+    filter_class = TitleFilter
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializers
     pagination_class = pagination.PageNumberPagination
+    lookup_field = 'username'
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

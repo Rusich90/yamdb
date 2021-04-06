@@ -14,6 +14,7 @@ class UserSerializers(serializers.ModelSerializer):
         model = User
         fields = ("first_name", "last_name", "username", "description",
                   "email", "role")
+        extra_field_kwargs = {'url': {'lookup_field': 'username'}}
 
 
 class CategorySerializers(serializers.ModelSerializer):

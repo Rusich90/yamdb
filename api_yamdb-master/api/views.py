@@ -78,22 +78,13 @@ def send_code(request):
         )
         return Response("Confirmation code was sent to your email")
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#     if request.method == 'GET':
-#         comments = Comment.objects.filter(post=pk)
-#         serializer = CommentSerializer(comments, many=True)
-#         return Response(serializer.data)
-#     elif request.method == 'POST':
-#         serializer = CommentSerializer(data=request.data)
-#         post = Post.objects.get(id=pk)
-#         if serializer.is_valid():
-#             serializer.save(author=request.user, post=post)
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#
-# send_mail(
-#     'Тема письма',
-#     'Текст письма.',
-#     'from@example.com',  # Это поле "От кого"
-#     ['to@example.com'],  # Это поле "Кому" (можно указать список адресов)
-#     fail_silently=False, # Сообщать об ошибках («молчать ли об ошибках?»)
-# )
+
+
+@api_view(['POST'])
+def get_token(request):
+    print(request.data)
+    email = request.data['email']
+    user = get_object_or_404(User, email=email)
+    confirmation_code = request.data['confirmation_code']
+    default_token_generator.check_token(user, confirmation_code)
+    print(default_token_generator.check_token(user, confirmation_code))

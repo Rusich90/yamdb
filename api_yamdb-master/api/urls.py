@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import (TitleViewSet, ReviewViewSet, UserViewSet,
                     CategoryViewSet, GenreViewSet, CommentsViewSet,
-                    send_code)
+                    send_code, get_token)
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -18,6 +18,7 @@ router.register('genres', GenreViewSet)
 
 urlpatterns = [
     path('auth/email/', send_code, name='send_code'),
+    path('auth/token/', get_token, name='get_token'),
     path('', include(router.urls)),
 ]
 

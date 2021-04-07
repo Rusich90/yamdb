@@ -10,7 +10,7 @@ class User(AbstractUser):
         ("admin", "admin")
     )
     role = models.CharField(choices=ROLE_CHOISE, default='user', max_length=10)
-    description = models.TextField(default=None)
+    description = models.TextField(blank=True, null=True)
 
 
 class Category(models.Model):

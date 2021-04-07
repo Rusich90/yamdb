@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import (TitleViewSet, ReviewViewSet, UserViewSet,
-                    CategoryViewSet, GenreViewSet, CommentsViewSet)
+                    CategoryViewSet, GenreViewSet, CommentsViewSet,
+                    send_code)
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
@@ -16,6 +17,7 @@ router.register('categories', CategoryViewSet)
 router.register('genres', GenreViewSet)
 
 urlpatterns = [
+    path('auth/email/', send_code, name='send_code'),
     path('', include(router.urls)),
 ]
 

@@ -10,6 +10,8 @@ class ReviewSerializers(serializers.ModelSerializer):
 
 
 class UserSerializers(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField()
+
     class Meta:
         model = User
         fields = ("first_name", "last_name", "username", "description",
@@ -24,7 +26,6 @@ class CategorySerializers(serializers.ModelSerializer):
 
 
 class GenreSerializers(serializers.ModelSerializer):
-
     class Meta:
         model = Genre
         fields = ("name", "slug")
@@ -52,9 +53,3 @@ class TitleSerializers(serializers.ModelSerializer):
             return 0
         rating = int(rt["score__avg"])
         return rating
-
-    # def get_category(self, obj):
-    #     category = {"name": obj.category.name,
-    #                 "slug": obj.category.slug}
-    #     return category
-

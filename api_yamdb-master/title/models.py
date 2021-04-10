@@ -10,8 +10,10 @@ class User(AbstractUser):
         ("admin", "admin")
     )
     role = models.CharField(choices=ROLE_CHOISE, default='user', max_length=10)
-    description = models.TextField(blank=True, null=True)
-
+    bio = models.TextField(blank=True, null=True)
+    username = models.CharField(max_length=50, unique=True, blank=False)
+    email = models.EmailField(unique=True, blank=False)
+    password = models.CharField(max_length=50, blank=True, null=True)
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)

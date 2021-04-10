@@ -2,7 +2,8 @@ from rest_framework import viewsets, status, pagination, filters
 from title.models import Review, Title, User, Category, Genre, Comments
 from .serializers import (ReviewSerializers, TitleSerializers,
                           UserSerializers, CategorySerializers,
-                          GenreSerializers, CommentsSerializers)
+                          GenreSerializers, CommentsSerializers,
+                          UserProfileSerializers)
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import TitleFilter
 from django.core.mail import send_mail
@@ -44,10 +45,11 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_class = TitleFilter
     permission_classes = [DjangoModelPermissions]
 
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializers
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, AdminPermission]
     pagination_class = pagination.PageNumberPagination
     lookup_field = 'username'
     filter_backends = [filters.SearchFilter]
@@ -80,6 +82,22 @@ class CommentsViewSet(viewsets.ModelViewSet):
         return Comments.objects.filter(
             review=self.kwargs["review_id"]
         )
+
+@api_view(['GET', 'PATCH'])
+def user_profile(request):
+    if request.method == "GET":
+        user = User.objects.get(username=request.user.username)
+        serializer = UserProfileSerializers(user)
+        return Response(serializer.data)
+    elif request.method == "PATCH":
+        user = User.objects.get(username=request.user.username)
+        serializer = UserProfileSerializers(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 @api_view(['POST'])

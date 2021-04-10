@@ -10,11 +10,10 @@ class ReviewSerializers(serializers.ModelSerializer):
 
 
 class UserSerializers(serializers.ModelSerializer):
-    username = serializers.ReadOnlyField()
 
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "username", "description",
+        fields = ("first_name", "last_name", "username", "bio",
                   "email", "role")
         extra_field_kwargs = {'url': {'lookup_field': 'username'}}
 
@@ -53,3 +52,14 @@ class TitleSerializers(serializers.ModelSerializer):
             return 0
         rating = int(rt["score__avg"])
         return rating
+
+
+class UserProfileSerializers(serializers.ModelSerializer):
+    username = serializers.ReadOnlyField()
+    email = serializers.ReadOnlyField()
+    role = serializers.ReadOnlyField()
+
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "username", "bio",
+                  "email", "role")

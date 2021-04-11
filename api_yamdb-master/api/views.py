@@ -1,9 +1,9 @@
 from rest_framework import viewsets, status, pagination, filters
 from title.models import Review, Title, User, Category, Genre, Comments
-from .serializers import (ReviewSerializers, TitleSerializers,
+from .serializers import (ReviewSerializers, TitleListSerializers,
                           UserSerializers, CategorySerializers,
                           GenreSerializers, CommentsSerializers,
-                          UserProfileSerializers)
+                          UserProfileSerializers, TitlePostSerializers)
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import TitleFilter
 from django.core.mail import send_mail
@@ -14,8 +14,9 @@ from django.contrib.auth.tokens import default_token_generator
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import (DjangoModelPermissionsOrAnonReadOnly,
                                         DjangoModelPermissions,
-                                        IsAuthenticated)
-from .permissions import AdminPermission
+                                        IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
+from .permissions import (AdminPermission, AdminPostPermission)
 
 
 def get_tokens_for_user(user):
@@ -40,10 +41,15 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    serializer_class = TitleSerializers
     pagination_class = pagination.PageNumberPagination
     filter_class = TitleFilter
-    permission_classes = [DjangoModelPermissions]
+    permission_classes = [IsAuthenticatedOrReadOnly, AdminPostPermission]
+
+    def get_serializer_class(self):
+        if self.request.method == ["POST", "PATCH", "DELETE"]:
+            return TitlePostSerializers
+        return TitleListSerializers
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -60,17 +66,19 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializers
     pagination_class = pagination.PageNumberPagination
+    lookup_field = 'slug'
     filter_backends = [filters.SearchFilter]
     search_fields = ["=name"]
-    permission_classes = [AdminPermission]
+    permission_classes = [IsAuthenticatedOrReadOnly, AdminPostPermission]
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializers
     pagination_class = pagination.PageNumberPagination
+    lookup_field = 'slug'
     filter_backends = [filters.SearchFilter]
     search_fields = ["=name"]
-    permission_classes = [AdminPermission]
+    permission_classes = [IsAuthenticatedOrReadOnly, AdminPostPermission]
 
 
 class CommentsViewSet(viewsets.ModelViewSet):

@@ -15,14 +15,24 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False)
     password = models.CharField(max_length=50, blank=True, null=True)
 
+    class Meta:
+        ordering = ['-id']
+
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=50, unique=True)
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Title(models.Model):
@@ -47,9 +57,16 @@ class Review(models.Model):
     score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
     pub_date = models.DateTimeField("date_published", auto_now_add=True)
 
+    class Meta:
+        unique_together = ['title', 'author']
+        ordering = ['-id']
+
 
 class Comments(models.Model):
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     pub_date = models.DateTimeField("date_published", auto_now_add=True)
+
+    class Meta:
+        ordering = ['-id']

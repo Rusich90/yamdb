@@ -3,20 +3,21 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 
+
 class User(AbstractUser):
     ROLE_CHOISE = (
         ("user", "user"),
         ("moderator", "moderator"),
         ("admin", "admin")
     )
-    role = models.CharField(choices=ROLE_CHOISE, default='user', max_length=10)
+    role = models.CharField(choices=ROLE_CHOISE, default="user", max_length=10)
     bio = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=50, unique=True, blank=False)
     email = models.EmailField(unique=True, blank=False)
     password = models.CharField(max_length=50, blank=True, null=True)
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
 
 
 class Category(models.Model):
@@ -24,7 +25,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=50, unique=True)
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
 
 
 class Genre(models.Model):
@@ -32,7 +33,7 @@ class Genre(models.Model):
     slug = models.SlugField(max_length=50, unique=True)
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]
 
 
 class Title(models.Model):
@@ -51,22 +52,27 @@ class Title(models.Model):
 
 
 class Review(models.Model):
-    title = models.ForeignKey(Title, on_delete=models.CASCADE, related_name='reviews')
+    title = models.ForeignKey(Title, on_delete=models.CASCADE,
+                              related_name="reviews")
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
-    score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name="reviews")
+    score = models.IntegerField(validators=[MinValueValidator(1),
+                                            MaxValueValidator(10)])
     pub_date = models.DateTimeField("date_published", auto_now_add=True)
 
     class Meta:
-        unique_together = ['title', 'author']
-        ordering = ['-id']
+        unique_together = ["title", "author"]
+        ordering = ["-id"]
 
 
 class Comments(models.Model):
-    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
+    review = models.ForeignKey(Review, on_delete=models.CASCADE,
+                               related_name="comments")
     text = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name="comments")
     pub_date = models.DateTimeField("date_published", auto_now_add=True)
 
     class Meta:
-        ordering = ['-id']
+        ordering = ["-id"]

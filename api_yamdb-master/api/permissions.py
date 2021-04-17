@@ -7,7 +7,6 @@ class AdminPermission(BasePermission):
         return request.user.role == "admin" or request.user.is_superuser
 
 
-
 class AdminPostPermission(BasePermission):
 
     def has_permission(self, request, view):
@@ -20,5 +19,6 @@ class OwnResourcePermission(BasePermission):
 
     def has_object_permission(self, request, view, obj):
         if request.method in ("PUT", "PATCH", "DELETE"):
-            return request.user == obj.author or request.user.role in ("admin", "moderator")
+            return request.user == obj.author \
+                   or request.user.role in ("admin", "moderator")
         return True

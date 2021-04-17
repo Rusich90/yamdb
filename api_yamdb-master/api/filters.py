@@ -1,5 +1,5 @@
 import django_filters
-from title.models import Review, Title, User, Category, Genre, Comments
+
 
 class TitleFilter(django_filters.FilterSet):
     genre = django_filters.CharFilter(field_name="genre__slug",

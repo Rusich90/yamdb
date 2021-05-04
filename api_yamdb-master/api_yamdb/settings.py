@@ -140,9 +140,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #         'rest_framework.permissions.IsAuthenticated',
+    # ],
 }
 
 SIMPLE_JWT = {
@@ -150,7 +150,15 @@ SIMPLE_JWT = {
 }
 
 
-#  подключаем движок filebased.EmailBackend
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-# указываем директорию, в которую будут складываться файлы писем
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+# #  подключаем движок filebased.EmailBackend
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# # указываем директорию, в которую будут складываться файлы писем
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'yamdb.code@gmail.com'
+EMAIL_HOST_PASSWORD = 'werfns90'
+EMAIL_PORT = 587

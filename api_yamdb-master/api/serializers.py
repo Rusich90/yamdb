@@ -77,3 +77,15 @@ class UserProfileSerializers(serializers.ModelSerializer):
         model = User
         fields = ("first_name", "last_name", "username", "bio",
                   "email", "role")
+
+
+class EmailSerializers(serializers.Serializer):
+
+    email = serializers.EmailField(required=True)
+    username = serializers.CharField(required=True, max_length=50)
+
+
+class TokenSerializers(serializers.Serializer):
+
+    email = serializers.EmailField(required=True)
+    confirmation_code = serializers.CharField(required=True)

@@ -4,13 +4,14 @@ from title.models import Review, Title, User, Category, Genre, Comments
 from .serializers import (ReviewSerializers, TitleListSerializers,
                           UserSerializers, CategorySerializers,
                           GenreSerializers, CommentsSerializers,
-                          UserProfileSerializers, TitlePostSerializers)
+                          UserProfileSerializers, TitlePostSerializers,
+                          EmailSerializers, TokenSerializers)
 from .filters import TitleFilter
 from django.core.mail import send_mail
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
@@ -18,15 +19,6 @@ from .permissions import (AdminPermission, AdminPostPermission,
                           OwnResourcePermission)
 from django.db.models import Avg
 from django.db import IntegrityError
-
-
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
-
-    return {
-        "refresh": str(refresh),
-        "access": str(refresh.access_token),
-    }
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -131,31 +123,50 @@ def user_profile(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ConfirmationCodeGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return str(user.pk) + str(timestamp)
+
+
+code_maker = ConfirmationCodeGenerator()
+
 @api_view(["POST"])
 def send_code(request):
-    serializer = UserSerializers(data=request.data)
-    if serializer.is_valid():
-        email = request.data["email"]
-        user = get_object_or_404(User, email=email)
-        confirmation_code = default_token_generator.make_token(user)
-        serializer.save
-        send_mail(
-            "Confirmation code",
-            f"Your confirmation code: {confirmation_code}",
-            "from@example.com",
-            [email],
-            fail_silently=False,
-        )
-        return Response("Confirmation code was sent to your email")
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer = EmailSerializers(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    email = request.data["email"]
+    username = request.data["username"]
+    user = User.objects.get_or_create(email=email, username=username)[0]
+    # user = get_object_or_404(User, email=email)
+    confirmation_code = code_maker.make_token(user=user)
+    serializer.save
+    send_mail(
+        "Confirmation code",
+        f"Your confirmation code: {confirmation_code}",
+        "from@example.com",
+        [email],
+        fail_silently=False,
+    )
+    return Response("Confirmation code was sent to your email")
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+
+    return {
+        "refresh": str(refresh),
+        "access": str(refresh.access_token),
+    }
 
 
 @api_view(["POST"])
 def get_token(request):
+    serializer = TokenSerializers(data=request.data)
+    serializer.is_valid(raise_exception=True)
     email = request.data["email"]
     user = get_object_or_404(User, email=email)
     confirmation_code = request.data["confirmation_code"]
-    if default_token_generator.check_token(user, confirmation_code):
+    if code_maker.check_token(user, confirmation_code):
         token = get_tokens_for_user(user)
         return Response(token)
     return Response("Confirmation code does not match",

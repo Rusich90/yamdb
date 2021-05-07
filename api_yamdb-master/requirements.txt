@@ -11,6 +11,8 @@ chardet==3.0.4            # via requests
 django==3.0.5             # via -r requirements.in, djangorestframework
 djangorestframework==3.11.0  # via -r requirements.in
 djangorestframework-simplejwt==4.6.0 # via -r requirements.in
+gunicorn==20.0.4          # via -r requirements.in
+psycopg2-binary==2.8.5    # via -r requirements.in
 django-filter==2.4.0      # via -r requirements.in
 idna==2.9                 # via requests
 importlib-metadata==1.6.0  # via pluggy, pytest

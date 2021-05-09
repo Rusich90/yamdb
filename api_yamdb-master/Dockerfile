@@ -16,4 +16,4 @@ RUN pip install -r /code/requirements.txt
 COPY . /code
 
 # при старте контейнера выполнить runserver
-CMD gunicorn api_yamdb.wsgi - 0.0.0.0:8000
+CMD gunicorn api_yamdb.wsgi -b 0.0.0.0:8000

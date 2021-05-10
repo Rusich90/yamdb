@@ -15,5 +15,7 @@ WORKDIR /code
 # выполнить команду (как в терминале, с тем же синтаксисом) для установки пакетов из requirements.txt
 RUN pip install -r requirements.txt
 
+RUN python manage.py collectstatic --no-input
+
 # при старте контейнера выполнить runserver
-CMD gunicorn --bind 0.0.0.0:8000 api_yamdb.wsgi
+CMD python manage.py migrate && gunicorn --bind 0.0.0.0:8000 api_yamdb.wsgi

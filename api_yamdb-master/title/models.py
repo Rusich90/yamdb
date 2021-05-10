@@ -38,11 +38,12 @@ class Genre(models.Model):
 
 class Title(models.Model):
     name = models.CharField(max_length=200, blank=False)
-    year = models.PositiveIntegerField(
-            validators=[
-                MinValueValidator(1000),
-                MaxValueValidator(datetime.now().year)],
-            help_text="Use the following format: <YYYY>")
+    year = models.IntegerField(db_index=True,
+                               validators=(
+                                   MinValueValidator(0),
+                                   MaxValueValidator(
+                                       datetime.now().year)
+                               ))
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL,
                                  related_name="category",

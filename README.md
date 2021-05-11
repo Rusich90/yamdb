@@ -43,4 +43,6 @@ ID контейнера узнать командой:
 
 ```$ python manage.py createsuperuser```
 
+API доступен по адресу http://127.0.0.1:80
+
 По инструкции на http://yamdb.rusich90.ru/redoc получаем confarmation-code и token

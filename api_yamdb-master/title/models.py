@@ -10,11 +10,11 @@ class User(AbstractUser):
         ("moderator", "moderator"),
         ("admin", "admin")
     )
-    role = models.CharField(choices=ROLE_CHOISE, default="user", max_length=10)
+    role = models.CharField(choices=ROLE_CHOISE, default="user", max_length=50)
     bio = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=50, unique=True, blank=False)
     email = models.EmailField(unique=True, blank=False)
-    password = models.CharField(max_length=50, blank=True, null=True)
+    password = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         ordering = ["-id"]
@@ -41,9 +41,7 @@ class Title(models.Model):
     year = models.IntegerField(db_index=True,
                                validators=(
                                    MinValueValidator(0),
-                                   MaxValueValidator(
-                                       datetime.now().year)
-                               ))
+                                   MaxValueValidator(2021)))
     description = models.TextField(null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL,
                                  related_name="category",

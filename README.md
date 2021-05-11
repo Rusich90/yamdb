@@ -3,6 +3,8 @@
 
 Учебный проект
 
+Развернут на сервере тремя докер контейнерами с помощью docker-compose
+
 Описание API доступно по адресу http://yamdb.rusich90.ru/redoc
 
 Для создания были использованы и изучены:
@@ -12,6 +14,8 @@
 * REST API
 * PostgreSQL
 * Linux
+* JWT Token
+* smtp gmail
 * Gunicorn, NGINX
 * Docker, Docker-compose
 

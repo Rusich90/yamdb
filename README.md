@@ -1,46 +1,45 @@
-Yatube - социальная сеть
-Описание
-Мой первый учебный проект на пути к Python Developer. Доступен по адресу https://yatube.rusich90.ru/
+# YaMDB - API сервис - База отзывов о фильмах, книгах и музыке
+## Описание
+
+Учебный проект
+Описание API доступно по адресу http://yamdb.rusich90.ru/redoc
 
 Для создания были использованы и изучены:
 
-Python
-Django
-REST API
-SQL
-HTML
-Linux
-Gunicorn, NGINX
-Удаленный сервер, доменные имена, SSL сертификаты
-Тестирование кода
+* Python
+* Django
+* REST API
+* PostgreSQL
+* Linux
+* Gunicorn, NGINX
+* Docker, Docker-compose
+
 Возможности:
 
-Публиковать, просматривать, изменять, удалять и комментировать посты
-Подписываться на авторов
-Загружать фотографии
-Просматривать и создавать группы.
-Комментировать, смотреть, удалять и обновлять комментарии.
-Так же реализован REST API, документация доступна по адресу https://yatube.rusich90.ru/redoc/
+* Оставлять отзывы и ставить оценки о фильмах, книгах, музыке.
+* Комментировать чужие отзывы
+* Разные уровни доступа для юзеров, модераторов и админов
+* Добавлять произведения, жанры и категории может только администратор
 
-Установка
+## Установка 
 Клонируем репозиторий на локальную машину:
 
-$ git clone https://github.com/Rusich90/yatube.git
+```$ git clone https://github.com/Rusich90/yamdb.git```
 
-Создаем виртуальное окружение:
+Запускаем сборку докера:
+ 
+ ```$ docker-compose up```
+ 
+Для создания админа джанго нужно зайти в контейнер приложения:
 
-$ python -m venv venv
+```$ docker exec -it <CONTAINER ID> bash```
 
-Устанавливаем зависимости:
+ID контейнера узнать командой:
 
-$ pip install -r requirements.txt
+```$ docker container ls```
 
-Создание и применение миграций:
+Создать суперюзера:
 
-$ python manage.py makemigrations и $ python manage.py migrate
+```$ python manage.py createsuperuser```
 
-Запускаем django сервер:
-
-$ python manage.py runserver
-
-Для подключения почтовой рассылки и мониторинга Sentry нужно создать файл .env (с секретными данными) в директории с settings.py и в самом settings.py раскомментировать настройки Sentry и почтового хоста.
+По инструкции на http://yamdb.rusich90.ru/redoc получаем confarmation-code и token

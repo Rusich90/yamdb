@@ -5,7 +5,7 @@
 
 Развернут на сервере тремя докер контейнерами с помощью docker-compose
 
-Описание API доступно по адресу http://yamdb.rusich90.ru/redoc
+Описание API доступно по адресу http://127.0.0.1:8000
 
 Для создания были использованы и изучены:
 
@@ -47,6 +47,6 @@ ID контейнера узнать командой:
 
 ```$ python manage.py createsuperuser```
 
-API доступен по адресу http://127.0.0.1:80
+API доступен по адресу http://127.0.0.1:8000
 
-По инструкции на http://yamdb.rusich90.ru/redoc получаем confarmation-code и token
+По инструкции на http://127.0.0.1:8000/redoc получаем confarmation-code и token
